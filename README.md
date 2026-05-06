@@ -1,18 +1,33 @@
 # Personal Finance Tracker
 
-This project is a small **personal finance tracker** you run in the browser. It lets you record income and expenses, organize them with categories, and view simple charts and totals.
+A personal finance web app built with Python and Streamlit. Track income and expenses, set monthly budgets, organize transactions by category, and visualize spending trends, all running locally in your browser.
+## Features
 
-Everything is implemented in **Python** using Streamlit for the UI, SQLite for storage, and Plotly plus Pandas for charts and tables.
+- Add and delete income/expense transactions with date, category, and notes
+- Custom categories for both income and expenses
+- Monthly budget limits per category with real-time tracking
+- Dashboard with summary KPIs (total income, expenses, net balance)
+- Plotly charts: spending donut, monthly income vs expense bar chart
+- Date range filters across all pages
+- Reports page for deeper spending breakdowns
+- SQLite database — no external services needed
 
+## Tech Stack
+
+- **Python** — core application logic
+- **Streamlit** — browser-based UI
+- **SQLite** — local data storage
+- **Plotly** — interactive charts
+- **Pandas** — data manipulation
 ## Install
 
 ```bash
 pip install -r requirements.txt
 ```
 
-## Seed sample data
+## Seed sample data (optional)
 
-Creates the database and fills roughly three months of realistic sample transactions (run once, or anytime you want a fresh demo database):
+Creates the database and fills roughly three months of realistic sample transactions for a demo:
 
 ```bash
 python seed.py
@@ -34,5 +49,4 @@ streamlit run app.py
 | `dashboard.py` | Summary metrics (income, expenses, net balance) and Plotly donut/bar charts with a date filter. |
 | `transactions.py` | Filterable transaction list, add form in an expander, and per-row delete buttons. |
 | `categories.py` | List categories, add new ones, delete only when no transactions use them. |
-| `seed.py` | Wipes `finance.db`, recreates schema, and inserts sample income/expense rows. |
-| `requirements.txt` | Python dependencies: Streamlit, Plotly, Pandas. |
+| `seed.py` | Demo data generator |
