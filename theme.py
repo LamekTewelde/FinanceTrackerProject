@@ -4,10 +4,10 @@ import html
 import streamlit as st
 
 # Colors used in Python (Plotly) and CSS for one unified dark theme.
-COLOR_INCOME = "#ffffff"
-COLOR_EXPENSE = "#e5e7eb"
-COLOR_NET_POSITIVE = "#ffffff"
-COLOR_NET_NEGATIVE = "#e5e7eb"
+COLOR_INCOME = "#3ef705"
+COLOR_EXPENSE = "#f70511"
+COLOR_NET_POSITIVE = "#3ef705"
+COLOR_NET_NEGATIVE = "##f70511"
 COLOR_MUTED = "#a3a3a3"
 COLOR_BORDER = "#262626"
 
