@@ -180,7 +180,6 @@ def render():
         data=csv_buffer.getvalue(),
         file_name=filename,
         mime="text/csv",
-        use_container_width=False,
     )
 
     st.divider()

@@ -1,5 +1,7 @@
 """Main Streamlit entry point: page config, database startup, and sidebar navigation."""
 
+import random
+
 import streamlit as st
 
 from categories import render as render_categories
@@ -7,6 +9,7 @@ from budgets import render as render_budgets
 from dashboard import render as render_dashboard
 from database import get_db
 from reports import render as render_reports
+from seed import seed_categories, seed_transactions
 from theme import apply_global_styles
 from transactions import render as render_transactions
 
@@ -33,6 +36,10 @@ def main():
     apply_global_styles()
     db = get_db()
     db.init_db()
+    # finance.db is gitignored, so a fresh deployment starts with an empty database.
+    if not db.get_categories():
+        seed_categories(db)
+        seed_transactions(db, random.Random(42))
 
     st.sidebar.markdown(
         '<p style="font-size:1.15rem;font-weight:700;color:#ffffff;margin:0 0 0.15rem 0;">'

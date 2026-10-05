@@ -28,7 +28,7 @@ def _render_sql_report(title: str, db_path: Path, sql: str, params: Optional[tup
     st.markdown(f"#### {title}")
     rows = _run_query(db_path, sql, params)
     if rows:
-        st.dataframe(rows, use_container_width=True, hide_index=True)
+        st.dataframe(rows, width="stretch", hide_index=True)
     else:
         st.info("No rows returned for this report.")
     with st.expander("Show raw SQL"):
@@ -77,7 +77,9 @@ def render():
     _render_sql_report("3) Month with highest expenses (last 12 months)", db.db_path, sql_highest_month)
 
     sql_ratio = """
+    
     SELECT strftime('%Y-%m', date) AS month,
+        
            ROUND(SUM(CASE WHEN type = 'income' THEN amount ELSE 0 END), 2) AS income,
            ROUND(SUM(CASE WHEN type = 'expense' THEN amount ELSE 0 END), 2) AS expense,
            ROUND(

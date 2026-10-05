@@ -12,8 +12,7 @@ DB_PATH = Path(__file__).resolve().parent / "finance.db"
 class FinanceDatabase:
     """Small database service class that encapsulates all SQLite access."""
 
-    # This method stores the database file path and makes the class ready to use.
-    # Params: db_path (optional custom path to the SQLite file).
+    
     def __init__(self, db_path: Optional[Path] = None):
         self.db_path = db_path or DB_PATH
 
@@ -71,6 +70,7 @@ class FinanceDatabase:
         try:
             conn.row_factory = sqlite3.Row
             cursor = conn.cursor()
+            #Getting the transactions from the the transactions database 
             query = "SELECT id, amount, type, category, date, note FROM transactions WHERE 1=1"
             params: list[Any] = []
             if filters.get("type"):
@@ -85,6 +85,7 @@ class FinanceDatabase:
             if filters.get("date_end"):
                 query += " AND date <= ?"
                 params.append(filters["date_end"])
+            #Ordering the transactions by newest to oldest dates and then the id incase the date is tied
             query += " ORDER BY date DESC, id DESC"
             cursor.execute(query, params)
             return [dict(row) for row in cursor.fetchall()]
@@ -133,6 +134,8 @@ class FinanceDatabase:
         try:
             cursor = conn.cursor()
             cursor.execute(
+                #Getting the total income fromt the transactions database within a specified date range
+                #COALESCE is used to return ) if the returned SUM is NULL
                 """
                 SELECT COALESCE(SUM(amount), 0) FROM transactions
                 WHERE type = 'income' AND date >= ? AND date <= ?
@@ -141,6 +144,7 @@ class FinanceDatabase:
             )
             income = float(cursor.fetchone()[0])
             cursor.execute(
+                #Getting the total expenses from the transactions database within a specified date range
                 """
                 SELECT COALESCE(SUM(amount), 0) FROM transactions
                 WHERE type = 'expense' AND date >= ? AND date <= ?
@@ -159,6 +163,8 @@ class FinanceDatabase:
         try:
             cursor = conn.cursor()
             cursor.execute(
+                #Getting the montly income and expense totals for the recent months
+                #Get the date from the transactions (income or expense) and then group them by the month and year
                 """
                 SELECT strftime('%Y-%m', date) AS ym,
                        SUM(CASE WHEN type = 'income' THEN amount ELSE 0 END) AS income_total,
@@ -182,6 +188,7 @@ class FinanceDatabase:
         try:
             cursor = conn.cursor()
             cursor.execute(
+
                 """
                 SELECT strftime('%Y-%m', date) AS ym,
                        SUM(CASE WHEN type = 'income' THEN amount ELSE 0 END),
@@ -204,6 +211,7 @@ class FinanceDatabase:
         try:
             cursor = conn.cursor()
             cursor.execute(
+                #Gets the total expenses grouped by each category and orders them by the total expense in descending order
                 """
                 SELECT category, SUM(amount) AS total
                 FROM transactions
@@ -242,6 +250,7 @@ class FinanceDatabase:
         try:
             cursor = conn.cursor()
             cursor.execute(
+                #Getting the category names and ordering them by name (alphabetical)
                 "SELECT name FROM categories WHERE type = ? ORDER BY name",
                 (type,),
             )
@@ -336,6 +345,7 @@ class FinanceDatabase:
             conn.close()
 
     # This method creates or updates a monthly spending limit for one category.
+    #If the category already exists then update the monthly limit
     # Params: category (expense category name), monthly_limit (positive amount).
     def upsert_budget(self, category: str, monthly_limit: float):
         conn = self._connect()
